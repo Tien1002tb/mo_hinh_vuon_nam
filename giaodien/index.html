@@ -125,11 +125,11 @@
       firebase.initializeApp(firebaseConfig);
       firebase.database();
       var tempElement = document.getElementById("temp");
-      var dbRefTemp = firebase.database().ref("nhietdo");
+      var dbRefTemp = firebase.database().ref("Nhietdo");
       dbRefTemp.on("value", (snap) => (tempElement.innerText = snap.val()));
 
       var humiElement = document.getElementById("humi");
-      var dbRefHumi = firebase.database().ref("doam");
+      var dbRefHumi = firebase.database().ref("Doam");
       dbRefHumi.on("value", (snap) => (humiElement.innerText = snap.val()));
 
       document.addEventListener("DOMContentLoaded", function () {
