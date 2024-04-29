@@ -25,41 +25,57 @@
       </div>
       <div class="title">HỆ THỐNG GIÁM SÁT VÀ ĐIỀU KHIỂN VƯỜN NẤM</div>
     </div>
-
-    <div class="sensor">
-      <div class="nhietdo">
-        <div class="nhietke">
-          <img
-            src="image/nhietke.png"
-            alt=""
-            style="width: 90px; height: 90px"
-          />
+    <div>
+      <div class="display">
+      <div class="sensor">
+        <div class="nhietdo">
+          <div class="nhietke">
+            <img
+              src="image/nhietke.png"
+              alt=""
+              style="width: 90px; height: 90px"
+            />
+          </div>
+          <h1
+            style="display: inline; margin-right: 10px; color: rgb(48, 15, 13)"
+          >
+            TEMPERATURE:
+          </h1>
+          <h1
+            style="display: inline; margin-right: 150px; color: rgb(48, 15, 13)"
+          >
+            <span id="temp"> </span> °C
+          </h1>
         </div>
-        <h1 style="display: inline; margin-right: 10px; color: rgb(48, 15, 13)">
-          TEMPERATURE:
-        </h1>
-        <h1
-          style="display: inline; margin-right: 150px; color: rgb(48, 15, 13)"
-        >
-          <span id="temp"> </span> °C
-        </h1>
+        <div class="doamdat">
+          <div class="amke">
+            <img
+              src="image/doam.png"
+              alt=""
+              style="width: 120px; height: 100px"
+            />
+          </div>
+          <h1
+            style="display: inline; margin-right: 10px; color: rgb(48, 15, 13)"
+          >
+            SOID MOISTURE:
+          </h1>
+          <h1
+            style="display: inline; margin-right: 150px; color: rgb(48, 15, 13)"
+          >
+            <span id="humi"> </span> %
+          </h1>
+        </div>
       </div>
-      <div class="doamdat">
-        <div class="amke">
-          <img
-            src="image/doam.png"
-            alt=""
-            style="width: 120px; height: 100px"
-          />
+      <div class="threshold">
+        <div class="temperature-threshold">
+          <h2>Ngưỡng nhiệt độ:</h2>
+          <input type="number" step="0.1" placeholder="Nhập nhiệt độ" id="NhietdoInput"/>
         </div>
-        <h1 style="display: inline; margin-right: 10px; color: rgb(48, 15, 13)">
-          SOID MOISTURE:
-        </h1>
-        <h1
-          style="display: inline; margin-right: 150px; color: rgb(48, 15, 13)"
-        >
-          <span id="humi"> </span> %
-        </h1>
+        <div class="humidity-threshold">
+          <h2>Ngưỡng độ ẩm:</h2>
+          <input type="number" step="0.1" placeholder="Nhập độ ẩm" id="DoamInput"/>
+        </div>
       </div>
     </div>
     <div class="equipmentContainer">
@@ -124,13 +140,48 @@
       // Initialize Firebase
       firebase.initializeApp(firebaseConfig);
       firebase.database();
+
       var tempElement = document.getElementById("temp");
-      var dbRefTemp = firebase.database().ref("Nhietdo");
+      var dbRefTemp = firebase.database().ref("sensor/Nhietdo");
       dbRefTemp.on("value", (snap) => (tempElement.innerText = snap.val()));
 
       var humiElement = document.getElementById("humi");
-      var dbRefHumi = firebase.database().ref("Doam");
+      var dbRefHumi = firebase.database().ref("sensor/Doam");
       dbRefHumi.on("value", (snap) => (humiElement.innerText = snap.val()));
+
+      var tempsetElement = document.getElementById("NhietdoInput");
+      var dbRefTempset = firebase.database().ref("sensorset/Nhietdoset");
+      dbRefTempset.on("value", (snap) => (tempsetElement.value = snap.val()));
+
+      var doamsetElement = document.getElementById("DoamInput");
+      var dbRefDoamset = firebase.database().ref("sensorset/Doamset");
+      dbRefDoamset.on("value", (snap) => (doamsetElement.value = snap.val()));
+
+
+      var inputElement = document.getElementById("NhietdoInput");
+      inputElement.addEventListener("input", function(event) {
+      var newValue = parseFloat(event.target.value);
+      firebase.database().ref("sensorset/Nhietdoset").set(newValue);
+      });
+
+      var dbRefTempset = firebase.database().ref("sensorset/Nhietdoset");
+      dbRefTempset.on("value", function(snapshot) {
+      var valueFromFirebase = snapshot.val();
+      inputElement.value = valueFromFirebase;
+      });
+
+      var inputElement = document.getElementById("DoamInput");
+      inputElement.addEventListener("input", function(event) {
+      var newValue = parseFloat(event.target.value);
+      firebase.database().ref("sensorset/Doamset").set(newValue);
+      });
+
+      var dbRefDoamset = firebase.database().ref("sensorset/Doamset");
+      dbRefDoamset.on("value", function(snapshot) {
+      var valueFromFirebase = snapshot.val();
+      inputElement.value = valueFromFirebase;
+      });
+
 
       document.addEventListener("DOMContentLoaded", function () {
         var btn1On = document.getElementById("btn1");
@@ -222,6 +273,8 @@
           });
         });
       });
+
+
     </script>
   </body>
 </html>
