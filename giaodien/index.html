@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>He thong giam sat</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      body,
+      html {
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        background-image: url(image/PIC2.jpg);
+        background-position: center;
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="titleContainer">
+      <div class="logo">
+        <img src="image/ptit.png" alt="" style="width: 150px; height: 150px" />
+      </div>
+      <div class="title">HỆ THỐNG GIÁM SÁT VÀ ĐIỀU KHIỂN VƯỜN NẤM</div>
+    </div>
+
+    <div class="sensor">
+      <div class="nhietdo">
+        <div class="nhietke">
+          <img
+            src="image/nhietke.png"
+            alt=""
+            style="width: 90px; height: 90px"
+          />
+        </div>
+        <h1 style="display: inline; margin-right: 10px; color: rgb(48, 15, 13)">
+          TEMPERATURE:
+        </h1>
+        <h1
+          style="display: inline; margin-right: 150px; color: rgb(48, 15, 13)"
+        >
+          <span id="temp"> </span> °C
+        </h1>
+      </div>
+      <div class="doamdat">
+        <div class="amke">
+          <img
+            src="image/doam.png"
+            alt=""
+            style="width: 120px; height: 100px"
+          />
+        </div>
+        <h1 style="display: inline; margin-right: 10px; color: rgb(48, 15, 13)">
+          SOID MOISTURE:
+        </h1>
+        <h1
+          style="display: inline; margin-right: 150px; color: rgb(48, 15, 13)"
+        >
+          <span id="humi"> </span> %
+        </h1>
+      </div>
+    </div>
+    <div class="equipmentContainer">
+      <div class="equipmentTitle">
+        <h1><i class="fas fa-wifi"></i>ĐIỀU KHIỂN THIẾT BỊ</h1>
+      </div>
+      <div class="equipmentTabContainer">
+        <div class="light">
+          <img src="image/light_off.png" class="light_on" id="light" alt="" />
+          <div class="boxbutton1">
+            <button type="button" id="btn1">On</button>
+            <button type="button" id="btn2">Off</button><br /><br />
+          </div>
+        </div>
+        <div class="fan">
+          <img src="image/fan_off.png" class="fan_on" id="fan" alt="" />
+          <div class="boxbutton2">
+            <button type="button" id="btn3">On</button>
+            <button type="button" id="btn4">Off</button><br /><br />
+          </div>
+        </div>
+        <div class="phunsuong">
+          <img src="image/PSoff.png" class="PS_on" id="phunsuong" alt="" />
+          <div class="boxbutton3">
+            <button type="button" id="btn5">On</button>
+            <button type="button" id="btn6">Off</button><br /><br />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <label for="text">Nguyễn Minh Tiến - B20DCDT183</label><br />
+      <label for="text">HỌC VIỆN CÔNG NGHỆ BƯU CHÍNH VIỄN THÔNG</label><br />
+    </div>
+    <script src="main.js"></script>
+    <!------------------------------------------------------------------------------------>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-database.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-analytics.js"></script>
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+
+      // TODO: Add SDKs for Firebase products that you want to use
+      // https://firebase.google.com/docs/web/setup#available-libraries
+
+      // Your web app's Firebase configuration
+      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+      const firebaseConfig = {
+        apiKey: "AIzaSyDAP_GzmXvjV-8KawkBgDcMjSSHVJyt2Qk",
+        authDomain: "garden-54e21.firebaseapp.com",
+        databaseURL: "https://garden-54e21-default-rtdb.firebaseio.com",
+        projectId: "garden-54e21",
+        storageBucket: "garden-54e21.appspot.com",
+        messagingSenderId: "354984548769",
+        appId: "1:354984548769:web:d47c31474a7b44181ed3e0",
+        measurementId: "G-Q73C9C0PG0",
+      };
+
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      firebase.database();
+      var tempElement = document.getElementById("temp");
+      var dbRefTemp = firebase.database().ref("nhietdo");
+      dbRefTemp.on("value", (snap) => (tempElement.innerText = snap.val()));
+
+      var humiElement = document.getElementById("humi");
+      var dbRefHumi = firebase.database().ref("doam");
+      dbRefHumi.on("value", (snap) => (humiElement.innerText = snap.val()));
+
+      document.addEventListener("DOMContentLoaded", function () {
+        var btn1On = document.getElementById("btn1");
+        var btn1Off = document.getElementById("btn2");
+        var lightImage = document.getElementById("light");
+
+        firebase
+          .database()
+          .ref("device/light")
+          .on("value", function (snapshot) {
+            var lightStatus = snapshot.val();
+            if (lightStatus === 1) {
+              lightImage.src = "image/light_on.png";
+            } else {
+              lightImage.src = "image/light_off.png";
+            }
+          });
+
+        btn1On.addEventListener("click", function () {
+          lightImage.src = "image/light_on.png";
+          firebase.database().ref("device").update({
+            light: 1,
+          });
+        });
+
+        btn1Off.addEventListener("click", function () {
+          lightImage.src = "image/light_off.png";
+          firebase.database().ref("device").update({
+            light: 0,
+          });
+        });
+        // Điều khiển quạt
+        var fanOnButton = document.getElementById("btn3");
+        var fanOffButton = document.getElementById("btn4");
+        var fanImage = document.getElementById("fan");
+        firebase
+          .database()
+          .ref("device/fan")
+          .on("value", function (snapshot) {
+            var fanStatus = snapshot.val();
+            if (fanStatus === 1) {
+              fanImage.src = "image/fan_on.png";
+            } else {
+              fanImage.src = "image/fan_off.png";
+            }
+          });
+        fanOnButton.addEventListener("click", function () {
+          fanImage.src = "image/fan_on.png";
+          firebase.database().ref("device").update({
+            fan: 1,
+          });
+        });
+
+        fanOffButton.addEventListener("click", function () {
+          fanImage.src = "image/fan_off.png";
+          firebase.database().ref("device").update({
+            fan: 0,
+          });
+        });
+
+        // Điều khiển máy phun sương
+        var phunsuongOnButton = document.getElementById("btn5");
+        var phunsuongOffButton = document.getElementById("btn6");
+        var phunsuongImage = document.getElementById("phunsuong");
+
+        firebase
+          .database()
+          .ref("device/phunsuong")
+          .on("value", function (snapshot) {
+            var phunsuongStatus = snapshot.val();
+            if (phunsuongStatus === 1) {
+              phunsuongImage.src = "image/PSon.png";
+            } else {
+              phunsuongImage.src = "image/PSoff.png";
+            }
+          });
+
+        phunsuongOnButton.addEventListener("click", function () {
+          phunsuongImage.src = "image/PSon.png";
+          firebase.database().ref("device").update({
+            phunsuong: 1,
+          });
+        });
+
+        phunsuongOffButton.addEventListener("click", function () {
+          phunsuongImage.src = "image/PSoff.png";
+          firebase.database().ref("device").update({
+            phunsuong: 0,
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
