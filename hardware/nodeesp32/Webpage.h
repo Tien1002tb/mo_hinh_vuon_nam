@@ -1,3 +1,5 @@
+const char Webpage[] =
+R"=====(
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -11,17 +13,235 @@
         height: 100%;
         width: 100%;
         margin: 0;
-        background-image: url(image/PIC2.jpg);
+        background-image: url(/PIC2.jpg);
         background-position: center;
         background-size: 100% 100%;
         background-repeat: no-repeat;
       }
+      * {
+  margin: 0;
+  padding: 0;
+}
+.titleContainer {
+  display: flex;
+  justify-content: space-between;
+  height: 5px;
+  width: 100%;
+}
+.title {
+  position: absolute;
+  right: 9%;
+  text-align: center; /* Căn lề giữa */
+  font-weight: bold; /* Font in đậm */
+  color: rgb(30, 2, 69);
+  font-family: "Times New Roman", Times, serif;
+  font-size: 39px;
+  letter-spacing: 0.15em;
+  padding-top: 30px;
+}
+.display {
+  display: inline-flex;
+  border: 1px solid transparent;
+  margin-top: 180px;
+}
+.display .sensor {
+  display: inline-block;
+  position: relative;
+  left: 160px;
+  background-color: rgba(172, 172, 25, 0.897);
+  text-size-adjust: 10%;
+  text-align: center;
+  width: 570px;
+  border-radius: 5%;
+}
+.display .threshold {
+  display: inline-block;
+  border: 1px solid transparent;
+  position: relative;
+  left: 350px;
+  background-color: rgba(172, 172, 25, 0.897);
+  width: 500px; /* Độ rộng của phần tử */
+  text-align: center;
+  border-radius: 5%;
+  padding: 30px;
+  line-height: 2;
+}
+.temperature-threshold input {
+  width: 200px;
+  height: 40px;
+  font-size: 19px;
+  text-align: center;
+  font-family: "Times New Roman", Times, serif;
+  font-weight: bold;
+}
+.humidity-threshold input {
+  width: 200px;
+  height: 40px;
+  font-size: 19px;
+  text-align: center;
+  font-family: "Times New Roman", Times, serif;
+  font-weight: bold;
+}
+
+.equipmentContainer {
+  width: 100%;
+  height: 300px;
+  margin-top: 20px;
+}
+.equipmentContainer .equipmentTitle {
+  font-family: "Orbitron", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 15px;
+  background-color: rgba(172, 172, 25, 0.897);
+  height: 15%;
+  display: flex;
+  justify-content: space-around;
+  color: rgb(25, 30, 179);
+  border-radius: 30px;
+  font-weight: bold;
+}
+.equipmentContainer .equipmentTabContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  background-color: rgba(53, 89, 119, 0.795);
+  height: 85%;
+  border: 3px solid rgb(25, 90, 230);
+  border-radius: 30px;
+}
+.light {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: stretch;
+  align-content: stretch;
+}
+.fan {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: stretch;
+  align-content: stretch;
+}
+.phunsuong {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: stretch;
+  align-content: stretch;
+}
+img.light_on {
+  width: 200px;
+  height: 200px;
+}
+img.light_off {
+  width: 200px;
+  height: 200px;
+}
+img.fan_on {
+  width: 200px;
+  height: 200px;
+}
+img.fan_off {
+  width: 200px;
+  height: 200px;
+}
+img.PS_on {
+  width: 200px;
+  height: 200px;
+}
+img.PS_off {
+  width: 200px;
+  height: 200px;
+}
+#btn1 {
+  width: 6rem;
+  font-family: "Orbitron", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 20px;
+  outline: none;
+  cursor: pointer;
+  background-color: rgb(255, 0, 0);
+  border-radius: 30px;
+}
+#btn2 {
+  width: 6rem;
+  font-family: "Orbitron", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 20px;
+  outline: none;
+  cursor: pointer;
+  background-color: rgb(0, 255, 76);
+  border-radius: 30px;
+}
+#btn3 {
+  width: 6rem;
+  font-family: "Orbitron", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 20px;
+  outline: none;
+  cursor: pointer;
+  background-color: rgb(255, 0, 0);
+  border-radius: 30px;
+}
+#btn4 {
+  width: 6rem;
+  font-family: "Orbitron", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 20px;
+  outline: none;
+  cursor: pointer;
+  background-color: rgb(0, 255, 76);
+  border-radius: 30px;
+}
+#btn5 {
+  width: 6rem;
+  font-family: "Orbitron", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 20px;
+  outline: none;
+  cursor: pointer;
+  background-color: rgb(255, 0, 0);
+  border-radius: 30px;
+}
+#btn6 {
+  width: 6rem;
+  font-family: "Orbitron", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 20px;
+  outline: none;
+  cursor: pointer;
+  background-color: rgb(0, 255, 76);
+  border-radius: 30px;
+}
+.footer {
+  font-family: "Orbitron", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 10px;
+  color: white;
+  padding-top: 10px;
+  text-align: center;
+  background-color: rgb(88, 86, 86);
+  border-radius: 30px;
+}
+
     </style>
   </head>
   <body>
     <div class="titleContainer">
       <div class="logo">
-        <img src="image/ptit.png" alt="" style="width: 150px; height: 150px" />
+        <img src="ptit" alt="" style="width: 150px; height: 150px" />
       </div>
       <div class="title">HỆ THỐNG GIÁM SÁT VÀ ĐIỀU KHIỂN VƯỜN NẤM</div>
     </div>
@@ -31,7 +251,7 @@
         <div class="nhietdo">
           <div class="nhietke">
             <img
-              src="image/nhietke.png"
+              src="nhietke"
               alt=""
               style="width: 90px; height: 90px"
             />
@@ -46,7 +266,7 @@
         <div class="doamdat">
           <div class="amke">
             <img
-              src="image/doam.png"
+              src="doam"
               alt=""
               style="width: 120px; height: 100px"
             />
@@ -74,21 +294,21 @@
       </div>
       <div class="equipmentTabContainer">
         <div class="light">
-          <img src="image/light_off.png" class="light_on" id="light" alt="" />
+          <img src="light_off" class="light_on" id="light" alt="" />
           <div class="boxbutton1">
             <button type="button" id="btn1">On</button>
             <button type="button" id="btn2">Off</button><br /><br />
           </div>
         </div>
         <div class="fan">
-          <img src="image/fan_off.png" class="fan_on" id="fan" alt="" />
+          <img src="fan_off" class="fan_on" id="fan" alt="" />
           <div class="boxbutton2">
             <button type="button" id="btn3">On</button>
             <button type="button" id="btn4">Off</button><br /><br />
           </div>
         </div>
         <div class="phunsuong">
-          <img src="image/PSoff.png" class="PS_on" id="phunsuong" alt="" />
+          <img src="PSoff" class="PS_on" id="phunsuong" alt="" />
           <div class="boxbutton3">
             <button type="button" id="btn5">On</button>
             <button type="button" id="btn6">Off</button><br /><br />
@@ -179,21 +399,21 @@ humiInputElement.addEventListener("input", function(event) {
           .on("value", function (snapshot) {
             var lightStatus = snapshot.val();
             if (lightStatus === 1) {
-              lightImage.src = "image/light_on.png";
+              lightImage.src = "light_on";
             } else {
-              lightImage.src = "image/light_off.png";
+              lightImage.src = "light_off";
             }
           });
 
         btn1On.addEventListener("click", function () {
-          lightImage.src = "image/light_on.png";
+          lightImage.src = "light_on";
           firebase.database().ref("device").update({
             light: 1,
           });
         });
 
         btn1Off.addEventListener("click", function () {
-          lightImage.src = "image/light_off.png";
+          lightImage.src = "light_off";
           firebase.database().ref("device").update({
             light: 0,
           });
@@ -208,20 +428,20 @@ humiInputElement.addEventListener("input", function(event) {
           .on("value", function (snapshot) {
             var fanStatus = snapshot.val();
             if (fanStatus === 1) {
-              fanImage.src = "image/fan_on.png";
+              fanImage.src = "fan_on";
             } else {
-              fanImage.src = "image/fan_off.png";
+              fanImage.src = "fan_off";
             }
           });
         fanOnButton.addEventListener("click", function () {
-          fanImage.src = "image/fan_on.png";
+          fanImage.src = "fan_on";
           firebase.database().ref("device").update({
             fan: 1,
           });
         });
 
         fanOffButton.addEventListener("click", function () {
-          fanImage.src = "image/fan_off.png";
+          fanImage.src = "fan_off";
           firebase.database().ref("device").update({
             fan: 0,
           });
@@ -238,28 +458,79 @@ humiInputElement.addEventListener("input", function(event) {
           .on("value", function (snapshot) {
             var phunsuongStatus = snapshot.val();
             if (phunsuongStatus === 1) {
-              phunsuongImage.src = "image/PSon.png";
+              phunsuongImage.src = "PSon";
             } else {
-              phunsuongImage.src = "image/PSoff.png";
+              phunsuongImage.src = "PSoff";
             }
           });
 
         phunsuongOnButton.addEventListener("click", function () {
-          phunsuongImage.src = "image/PSon.png";
+          phunsuongImage.src = "PSon";
           firebase.database().ref("device").update({
             phunsuong: 1,
           });
         });
 
         phunsuongOffButton.addEventListener("click", function () {
-          phunsuongImage.src = "image/PSoff.png";
+          phunsuongImage.src = "PSoff";
           firebase.database().ref("device").update({
             phunsuong: 0,
           });
         });
       });
+      var tabButtons = document.querySelectorAll(
+  ".tabContainer .buttonContainer button"
+);
+
+function showPanel(panel) {
+  tabButtons.forEach(function (node) {
+    node.style.backgroundColor = "";
+    node.style.color = "";
+  });
+}
+
+// khoi tao cac thong so
+let btn1 = document.querySelector("#btn1");
+let img = document.querySelector("#light");
+let btn2 = document.querySelector("#btn2");
+
+// functions nut bam
+btn1.addEventListener("click", () => {
+  img.src = "light_on";
+});
+
+btn2.addEventListener("click", () => {
+  img.src = "light_off";
+});
+
+let btn3 = document.querySelector("#btn3");
+let img2 = document.querySelector("#fan");
+let btn4 = document.querySelector("#btn4");
+
+// functions nut bam
+btn3.addEventListener("click", () => {
+  img2.src = "fan_on";
+});
+
+btn4.addEventListener("click", () => {
+  img2.src = "fan_off";
+});
+
+let btn5 = document.querySelector("#btn5");
+let img3 = document.querySelector("#phunsuong");
+let btn6 = document.querySelector("#btn6");
+
+// functions nut bam
+btn5.addEventListener("click", () => {
+  img3.src = "PSon";
+});
+
+btn6.addEventListener("click", () => {
+  img3.src = "PSoff";
+});
 
 
     </script>
   </body>
 </html>
+)=====";
