@@ -1,8 +1,20 @@
+#include <ESPAsyncWebServer.h>
+#include <AsyncTCP.h>
+#include <WiFi.h>
+#include <ESP32Firebase.h>
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 #include <DHT.h>
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
+
+#define FIREBASE_HOST "https://garden-54e21-default-rtdb.firebaseio.com/"
+#define FIREBASE_AUTH "ECbbulUCJtIhSzDclYpt26a4Lf67Ehqq8sMm2jLH"
+#define WIFI_SSID "B20DCDT183"
+#define WIFI_PASSWORD "tien1022002"
+
+Firebase firebase(FIREBASE_HOST);
+AsyncWebServer server(80);
 
 #define AOUT_PIN 14 // cam bien do am dat
 const int max_kho = 3000;   
@@ -380,12 +392,11 @@ void taskDataCollection(void *pvParameters) {
           Serial.print("phunsuong:");
           Serial.println(phunsuong1);
 
-          
-          // Bao gồm trạng thái của thiết bị vào chuỗi dữ liệu
           sprintf(data, "%d/%d/%d/%d/%d", nhietdo_hientai, percentage, fan, light, phunsuong1);
           
           Serial2.println(data);
-          dataChanged = false; // Đặt lại cờ dữ liệu đã thay đổi
+          Serial.println(data);
+          dataChanged = false; 
         }
 
         xSemaphoreGive(xSemaphore);
@@ -395,8 +406,6 @@ void taskDataCollection(void *pvParameters) {
     vTaskDelay(pdMS_TO_TICKS(updateInterval)); 
   }
 }
-
-
 
 void taskHandleButtons(void *pvParameters) {
   while (1) {
@@ -411,6 +420,12 @@ void taskUpdateLCD(void *pvParameters) {
       hien_thi();
       dataChanged = false; 
     }
+    if (dataChanged &&  demtong == 2 && congtru_tong == 1){
+      setting();
+      chon_setting();
+      dataChanged = false; 
+    }
+
     vTaskDelay(pdMS_TO_TICKS(100)); 
   }
 }
@@ -448,7 +463,29 @@ void control(void *p) {
 }
 }
 
+void taskSetData(void *pvParameters) {
+  int nhietdoweb_new;
+  int doamweb_new;
+  int nhietdoweb;
+  int doamweb;
 
+  while (true) {
+    nhietdoweb_new = firebase.getInt("sensorset/Nhietdoset");
+    doamweb_new = firebase.getInt("sensorset/Doamset");
+
+    if (nhietdoweb_new != nhietdoweb) {
+      nhietdo_thietlap = nhietdoweb_new;
+      nhietdoweb = nhietdoweb_new;
+      dataChanged = true; 
+    }
+    if (doamweb_new != doamweb) {
+      doam_thietlap = doamweb_new;
+      doamweb = doamweb_new;
+      dataChanged = true; 
+    }
+    vTaskDelay(100);
+  }
+}
 void setup() {
   Serial.begin(115200);  
   Serial2.begin(9600, SERIAL_8N1, Rx , Tx);
@@ -462,11 +499,21 @@ void setup() {
   pinMode(den, OUTPUT);
   pinMode(quat, OUTPUT);
   pinMode(phunsuong, OUTPUT);
+  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("");
+  Serial.print("Connected to ");
+  Serial.print("IP address: ");
+  Serial.println(WiFi.localIP());
   manhinh();
   xTaskCreatePinnedToCore(control, "TaskDieukhien", 1000, NULL, 1, NULL, 1);
   xTaskCreatePinnedToCore(taskDataCollection, "TaskDocNhietDo", 10000, NULL, 1, NULL, 1);
   xTaskCreatePinnedToCore(taskHandleButtons, "TaskHandleButtons", 10000, NULL, 1, NULL, 1);
   xTaskCreatePinnedToCore(taskUpdateLCD, "TaskUpdateLCD", 10000, NULL, 1, NULL, 1);
+  xTaskCreatePinnedToCore(taskSetData, "TaskSEtDat",10000, NULL, 1, NULL, 0);
 }
 
 void loop() {

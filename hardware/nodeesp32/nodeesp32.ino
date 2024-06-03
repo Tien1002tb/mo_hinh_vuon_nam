@@ -20,12 +20,8 @@
 Firebase firebase(FIREBASE_HOST);
 AsyncWebServer server(80);
 
-int nhietdo = 25;
-int doam = 50;
-int quat, den, phunsuong;
-
 QueueHandle_t dataQueue;
-
+bool newdata = false;
 typedef struct {
   int nhietdo;
   int doam;
@@ -39,59 +35,31 @@ void receiveDataFromUART(void *p) {
   SensorData sensorData;
   while (1) {
     if (Serial2.available()) {
-      Serial2.readBytesUntil('\n', data, 100);
+      int length = Serial2.readBytesUntil('\n', data, 100);
+      data[length] = '\0';
       if (sscanf(data, "%d/%d/%d/%d/%d", &sensorData.nhietdo, &sensorData.doam, &sensorData.quat, &sensorData.den, &sensorData.phunsuong) == 5) {
         Serial.println(sensorData.quat);
         Serial.println(sensorData.den);
-        if(xQueueSend(dataQueue, &sensorData, portMAX_DELAY) != pdPASS) {
-          Serial.println("Failed to send to queue");
-        }
+        // Gửi dữ liệu lên Firebase từng giá trị một
+        firebase.setInt("sensor/Nhietdo", sensorData.nhietdo);
+        Serial.println("Nhietdo updated successfully");
+
+        firebase.setInt("sensor/Doam", sensorData.doam);
+        Serial.println("Doam updated successfully");
+
+        firebase.setInt("device/fan", sensorData.quat);
+        Serial.println("Fan updated successfully");
+
+        firebase.setInt("device/light", sensorData.den);
+        Serial.println("Light updated successfully");
+
+        firebase.setInt("device/phunsuong", sensorData.phunsuong);
+        Serial.println("Phunsuong updated successfully");
       }
-      taskYIELD();
-      esp_task_wdt_reset(); // Feed the watchdog
-    } else {
-      vTaskDelay(1000); // Delay for a short period if no data is available
     }
+    vTaskDelay(pdMS_TO_TICKS(2));
   }
 }
-
-void sendDataToFirebase(void *p) {
-  SensorData sensorData;
-  while (1) {
-    if (xQueueReceive(dataQueue, &sensorData, portMAX_DELAY)) {
-      firebase.setInt("sensor/Nhietdo", sensorData.nhietdo);
-      firebase.setInt("sensor/Doam", sensorData.doam);
-      firebase.setInt("device/fan", sensorData.quat);
-      firebase.setInt("device/light", sensorData.den);
-    }
-   taskYIELD();
-      esp_task_wdt_reset();  // Feed the watchdog
-  }
-}
-
-void getDataFromFirebase(void *p) {
-  char DataSet[100];
-   while(1){
-    int nhietdo_set = firebase.getInt("sensorset/Nhietdoset");
-    int doam_set = firebase.getInt("sensorset/Doamset");
-    
-
-    // In ra giá trị đã nhận được từ Firebase để kiểm tra trên Serial Monitor
-    Serial.print("Nhietdoset: ");
-    Serial.println(nhietdo_set);
-    Serial.print("Doamset: ");
-    Serial.println(doam_set);
-
-    // Gửi giá trị của hai biến qua UART
-    sprintf(DataSet, "%d/%d", nhietdo_set, doam_set);
-    Serial2.println(DataSet);
-    Serial.println(DataSet);
-    // Delay giữa các lần đọc dữ liệu từ Firebase
-    vTaskDelay(2000 / portTICK_PERIOD_MS);
-    esp_task_wdt_reset(); // Feed the watchdog
-  }
-}
-
 void setup() {
   Serial.begin(115200);
   Serial2.begin(9600, SERIAL_8N1, RX_PIN, TX_PIN);
@@ -137,19 +105,8 @@ void setup() {
     request->send(SPIFFS, "/PSon.png", "image/png");
   });
   server.begin();
-
-  dataQueue = xQueueCreate(20, sizeof(SensorData)); // Tạo hàng đợi với 10 phần tử;
   xTaskCreatePinnedToCore(receiveDataFromUART, "Task receive UART data", 10000, NULL, 1, NULL, 0);
-  xTaskCreatePinnedToCore(sendDataToFirebase, "Task send data to Firebase", 10000, NULL, 1, NULL, 0);
-  xTaskCreatePinnedToCore(
-    getDataFromFirebase,   /* Task function. */
-    "TaskGetData",         /* String with name of task. */
-    10000,                 /* Stack size in bytes. */
-    NULL,                  /* Parameter passed as input of the task */
-    1,                     /* Priority of the task. */
-    NULL,                  /* Task handle. */
-    );                 
+               
 }
-
 void loop() {
 }
